@@ -4,7 +4,16 @@ local on_init = require("nvchad.configs.lspconfig").on_init
 local capabilities = require("nvchad.configs.lspconfig").capabilities
 
 local lspconfig = require "lspconfig"
-local servers = { "html", "cssls" }
+local servers = { "html", "cssls", "clangd",}
+
+lspconfig.clangd.setup{
+  on_attach = function(client, bufnr)
+  client.server_capabilities.signatureHelpProvider = false
+  on_attach(client, bufnr)
+  end,
+
+  capabilities = capabilities,
+ }
 
 -- lsps with default config
 for _, lsp in ipairs(servers) do
@@ -16,7 +25,7 @@ for _, lsp in ipairs(servers) do
 end
 
 -- typescript
-lspconfig.tsserver.setup {
+lspconfig.ts_ls.setup {
   on_attach = on_attach,
   on_init = on_init,
   capabilities = capabilities,
